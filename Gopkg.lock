@@ -2,20 +2,14 @@
 
 
 [[projects]]
-  name = "github.com/gorilla/context"
+  name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
-  version = "v1.1"
-
-[[projects]]
-  name = "github.com/gorilla/mux"
-  packages = ["."]
-  revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
-  version = "v1.6.1"
+  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
+  version = "v2.1.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4212248b7f50201de7dd825b9603236a5a9ea952519be13b46e30544213de809"
+  inputs-digest = "9aeea773a778bfcaf7a592cba29482cc41403ac6642e31709d7a2ad5b9562347"
   solver-name = "gps-cdcl"
   solver-version = 1

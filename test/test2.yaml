@@ -1,0 +1,3 @@
+pool:
+  selection: "roundrobin"
+  workers:

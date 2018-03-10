@@ -28,13 +28,13 @@ func NewManager(selection string, workers []*Worker) (*Manager, error) {
 
 const (
 	// RoundRobin defines a selection algorithm in which requests are distributed evenly amongst the workers in a pool
-	RoundRobin = "RoundRobin"
+	RoundRobin = "roundrobin"
 
 	// LeastConn defines a selection algorithm in which requests are sent to the worker that has the least amount of connections
-	LeastConn = "LeastConnections"
+	LeastConn = "leastconnections"
 
 	// IPHash defines a selection algorithm in the IP address of the client is used to determine which worker receives the request
-	IPHash = "IPHash"
+	IPHash = "iphash"
 )
 
 // GetNextWorker returns the next worker in line to perform work based on the selection algorithm

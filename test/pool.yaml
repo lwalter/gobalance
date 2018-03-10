@@ -1,0 +1,9 @@
+pool:
+  selection: "roundrobin"
+  workers:
+    - scheme: "http"
+      host: "localhost"
+      port: 8080
+    - scheme: "http"
+      host: "localhost"
+      port: 8081

@@ -1,10 +1,11 @@
 ## TODO
 - [ ] Development pool
+- [ ] CLI
 - [ ] SSL termination
 - [ ] Selection algorithms (round robin, least connection, ip hash)
 - [ ] Documentation
 - [ ] Header modification
-- [ ] Init from config
+- [x] Init from config
 - [ ] Statistics
 - [ ] Logging
 - [ ] REST API
