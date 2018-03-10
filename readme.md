@@ -1,12 +1,15 @@
 ## TODO
-- [ ] Development pool
+- [x] Init from config
+- [x] Pool manager and workers
 - [ ] CLI
-- [ ] SSL termination
-- [ ] Selection algorithms (round robin, least connection, ip hash)
+- [ ] Development pool
+- [ ] Round robin
 - [ ] Documentation
 - [ ] Header modification
-- [x] Init from config
 - [ ] Statistics
 - [ ] Logging
+- [ ] SSL termination
+- [ ] Least connection
+- [ ] Ip hash
 - [ ] REST API
 - [ ] Management UI
