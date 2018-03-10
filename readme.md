@@ -1,0 +1,11 @@
+## TODO
+- [ ] Development pool
+- [ ] SSL termination
+- [ ] Selection algorithms (round robin, least connection, ip hash)
+- [ ] Documentation
+- [ ] Header modification
+- [ ] Init from config
+- [ ] Statistics
+- [ ] Logging
+- [ ] REST API
+- [ ] Management UI
