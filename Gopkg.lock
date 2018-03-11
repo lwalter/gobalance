@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/ogier/pflag"
+  packages = ["."]
+  revision = "32a05c62658bd1d7c7e75cbc8195de5d585fde0f"
+  version = "v0.0.1"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
@@ -10,6 +16,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9aeea773a778bfcaf7a592cba29482cc41403ac6642e31709d7a2ad5b9562347"
+  inputs-digest = "3023e7604bc336bcab6e1719d61c4d7cb6d887bd9be77b4f29e6f906dc8961e8"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,8 +1,10 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	yaml "gopkg.in/yaml.v2"
@@ -30,30 +32,44 @@ type Worker struct {
 var Config Gobalance
 
 // LoadConfig reads in gobalance configuration from a yaml file
-func LoadConfig(path string) {
+func LoadConfig(path string) error {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("Config file does not exist: %s", path)
+		}
+
+		return fmt.Errorf("Could not read file at: %s\n%s", path, err)
+	}
+
 	source, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("Could not read file: %s\n%s", path, err)
 	}
 
 	err = yaml.Unmarshal(source, &Config)
 
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("Could not parse config file at: %s\n%s", path, err)
 	}
 
-	validateConfig()
+	err = validateConfig()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func validateConfig() {
+func validateConfig() error {
 	if Config.Pool.Selection == "" {
-		panic("No selection algorithm was parsed from configuration file")
+		return errors.New("No selection algorithm was parsed from configuration file")
 	}
 
 	wCount := len(Config.Pool.Workers)
 	if wCount == 0 {
-		panic("No workers were parsed from configuration file")
+		return errors.New("No workers were parsed from configuration file")
 	}
 
 	var errs []string
@@ -69,6 +85,8 @@ func validateConfig() {
 
 	if len(errs) > 0 {
 		err := strings.Join(errs, "\n")
-		panic(err)
+		return errors.New(err)
 	}
+
+	return nil
 }

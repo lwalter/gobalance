@@ -1,6 +1,8 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 )
 
@@ -18,77 +20,72 @@ func TestLoadConfigReadsFile(t *testing.T) {
 	}
 }
 
-func TestLoadConfigPanicsWhenFileNotFound(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("The code did not panic")
-		}
-	}()
-
+func TestLoadConfigReturnsErrWhenFileNotFound(t *testing.T) {
 	path := "../test/asdf.yaml"
-	LoadConfig(path)
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := fmt.Errorf("Config file does not exist: %s", path)
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: [%s]\nExpected: [%s]", err, expected)
+	}
 }
 
-func TestLoadConfigPanicsWhenSelectionNotSet(t *testing.T) {
-	defer func() {
-		r := recover()
-		if r == nil {
-			t.Errorf("The code did not panic")
-		}
-
-		if r != "No selection algorithm was parsed from configuration file" {
-			t.Errorf("Incorrect panic message: %s", r)
-		}
-	}()
-
+func TestLoadConfigReturnsErrWhenSelectionNotSet(t *testing.T) {
 	path := "../test/test1.yaml"
-	LoadConfig(path)
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := errors.New("No selection algorithm was parsed from configuration file")
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: %s\nExpected: %s", err, expected)
+	}
 }
 
-func TestLoadConfigPanicsWhenWorkersNotSet(t *testing.T) {
-	defer func() {
-		r := recover()
-		if r == nil {
-			t.Errorf("The code did not panic")
-		}
-
-		if r != "No workers were parsed from configuration file" {
-			t.Errorf("Incorrect panic message: %s", r)
-		}
-	}()
-
+func TestLoadConfigReturnsErrWhenWorkersNotSet(t *testing.T) {
 	path := "../test/test2.yaml"
-	LoadConfig(path)
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := errors.New("No workers were parsed from configuration file")
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: %s\nExpected: %s", err, expected)
+	}
 }
 
-func TestLoadConfigPanicsWhenSchemeNotSet(t *testing.T) {
-	defer func() {
-		r := recover()
-		if r == nil {
-			t.Errorf("The code did not panic")
-		}
-
-		if r != "Worker at index 0 did not have a scheme set" {
-			t.Errorf("Incorrect panic message: [%s]", r)
-		}
-	}()
-
+func TestLoadConfigReturnsErrWhenSchemeNotSet(t *testing.T) {
 	path := "../test/test3.yaml"
-	LoadConfig(path)
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := errors.New("Worker at index 0 did not have a scheme set")
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: %s\nExpected: %s", err, expected)
+	}
 }
 
-func TestLoadConfigPanicsWhenHostNotSet(t *testing.T) {
-	defer func() {
-		r := recover()
-		if r == nil {
-			t.Errorf("The code did not panic")
-		}
-
-		if r != "Worker at index 0 did not have a host set" {
-			t.Errorf("Incorrect panic message: [%s]", r)
-		}
-	}()
-
+func TestLoadConfigReturnsErrWhenHostNotSet(t *testing.T) {
 	path := "../test/test4.yaml"
-	LoadConfig(path)
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := errors.New("Worker at index 0 did not have a host set")
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: %s\nExpected: %s", err, expected)
+	}
 }

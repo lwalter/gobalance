@@ -1,7 +1,7 @@
 ## TODO
 - [x] Init from config
 - [x] Pool manager and workers
-- [ ] CLI
+- [x] CLI
 - [ ] Development pool
 - [ ] Round robin
 - [ ] Documentation
