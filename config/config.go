@@ -12,13 +12,20 @@ import (
 
 // Gobalance defines the configuration file structure
 type Gobalance struct {
-	Pool Pool
+	Pool     Pool
+	Balancer Balancer
 }
 
 // Pool defines the configuration node for a Pool
 type Pool struct {
 	Workers   []Worker
 	Selection string
+}
+
+// Balancer defines the configuraiton node for the http load balancer
+type Balancer struct {
+	Port int
+	Host string
 }
 
 // Worker defines the configuration node for a Worker
@@ -63,6 +70,10 @@ func LoadConfig(path string) error {
 }
 
 func validateConfig() error {
+	if Config.Balancer.Host == "" {
+		return errors.New("No host specified for load balancer")
+	}
+
 	if Config.Pool.Selection == "" {
 		return errors.New("No selection algorithm was parsed from configuration file")
 	}

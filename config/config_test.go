@@ -34,6 +34,20 @@ func TestLoadConfigReturnsErrWhenFileNotFound(t *testing.T) {
 	}
 }
 
+func TestLoadConfigReturnsErrWhenBalancerHostNotSet(t *testing.T) {
+	path := "../test/test5.yaml"
+	err := LoadConfig(path)
+
+	if err == nil {
+		t.Errorf("Expected error from LoadConfig")
+	}
+
+	expected := errors.New("No host specified for load balancer")
+	if err.Error() != expected.Error() {
+		t.Errorf("Actual error different than expected.\nActual: %s\nExpected: %s", err, expected)
+	}
+}
+
 func TestLoadConfigReturnsErrWhenSelectionNotSet(t *testing.T) {
 	path := "../test/test1.yaml"
 	err := LoadConfig(path)

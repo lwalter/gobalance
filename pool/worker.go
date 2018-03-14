@@ -3,6 +3,7 @@ package pool
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -26,7 +27,8 @@ func (w *Worker) SendRequest(method string, endpoint string) (*http.Response, er
 		return nil, errors.New("Worker http client not initialized")
 	}
 
-	url := fmt.Sprintf("%s://%s:%d/%s", w.Scheme, w.Host, w.Port, endpoint)
+	url := fmt.Sprintf("%s://%s:%d%s", w.Scheme, w.Host, w.Port, endpoint)
+	log.Printf(fmt.Sprintf("Sending request to %s", url))
 	req, err := http.NewRequest(method, url, nil)
 
 	if err != nil {

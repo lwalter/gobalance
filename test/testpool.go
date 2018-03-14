@@ -42,7 +42,9 @@ func initRouters(count int) []*mux.Router {
 	for i := 0; i < count; i++ {
 		router := mux.NewRouter()
 		name := fmt.Sprintf("server-%d", i)
-		router.HandleFunc(route, rootHandler(name)).Methods(
+		catchAll := router.PathPrefix("/")
+		catchAll.Handler(http.HandlerFunc(rootHandler(name)))
+		catchAll.Methods(
 			"GET",
 			"POST",
 			"PUT",
@@ -84,7 +86,7 @@ func runServers(routers []*mux.Router, ports []int) error {
 
 func main() {
 	// TODO(lnw) pass in via command line arg
-	ports := []int{4000, 4001}
+	ports := []int{8080, 8081}
 	count := len(ports)
 	routers := initRouters(count)
 	runServers(routers, ports)

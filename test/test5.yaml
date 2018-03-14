@@ -1,11 +1,11 @@
 balancer:
   port: 4000
-  host: "localhost"
+  host: ""
 pool:
   selection: "roundrobin"
   workers:
     - scheme: "http"
-      host: "localhost"
+      host: ""
       port: 8080
     - scheme: "http"
       host: "localhost"
