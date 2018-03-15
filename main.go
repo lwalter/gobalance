@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/lwalter/gobalance/balancer"
 	"github.com/lwalter/gobalance/config"
 	"github.com/lwalter/gobalance/pool"
 	"github.com/ogier/pflag"
@@ -33,40 +33,6 @@ func parseFlags() {
 	}
 }
 
-// CatchAllHandler handles the incoming request to the load balancer
-func CatchAllHandler(m *pool.Manager) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		wrkr, err := m.GetNextWorker()
-
-		if err != nil {
-			log.Println("Couldnt get a worker")
-			http.Error(w, "Internal server error", 500)
-			return
-		}
-
-		// TODO(lnw) make concurrent, use channels?
-		resp, err := wrkr.SendRequest(r.Method, r.URL.RequestURI())
-
-		if err != nil {
-			log.Println("Upstream worker failed to send request")
-			http.Error(w, "Internal server error", 500)
-			return
-		}
-
-		w.WriteHeader(resp.StatusCode)
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-
-		if err != nil {
-			log.Println("Upstream worker failed to send request")
-			http.Error(w, "Internal server error", 500)
-			return
-		}
-
-		w.Write(body)
-	}
-}
-
 func main() {
 	parseFlags()
 	err := config.LoadConfig(cfgPath)
@@ -75,13 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// TODO(lnw) this should probably be in the pool package
-	var wrkrs []*pool.Worker
-	for _, wc := range config.Config.Pool.Workers {
-		wrkr := pool.NewWorker(wc.Scheme, wc.Host, wc.Port)
-		wrkrs = append(wrkrs, wrkr)
-	}
-
+	wrkrs := pool.CreateWorkersFromConfig(config.Config.Pool.Workers)
 	m, err := pool.NewManager(config.Config.Pool.Selection, wrkrs)
 
 	if err != nil {
@@ -90,7 +50,7 @@ func main() {
 
 	router := mux.NewRouter()
 	catchAll := router.PathPrefix("/")
-	catchAll.Handler(http.HandlerFunc(CatchAllHandler(m)))
+	catchAll.Handler(http.HandlerFunc(balancer.CatchAllHandler(m)))
 
 	p := strconv.Itoa(config.Config.Balancer.Port)
 	h := config.Config.Balancer.Host

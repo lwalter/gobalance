@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strconv"
 	"testing"
+
+	"github.com/lwalter/gobalance/config"
 )
 
 func createExampleServer() *httptest.Server {
@@ -46,5 +48,42 @@ func TestSendRequest(t *testing.T) {
 
 	if resp.StatusCode != 200 {
 		t.Errorf("Invalid response from test server: %d", resp.StatusCode)
+	}
+}
+
+func TestCreateWorkersFromConfigGeneratesArray(t *testing.T) {
+	cfg := []config.Worker{
+		config.Worker{
+			Host:   "localhost",
+			Port:   8080,
+			Scheme: "http",
+		},
+		config.Worker{
+			Host:   "localhost",
+			Port:   8081,
+			Scheme: "http",
+		},
+	}
+
+	wrkrs, err := CreateWorkersFromConfig(cfg)
+
+	if err != nil {
+		t.Errorf("Err returned from CreateWorkersFromConfig: %s", err)
+	}
+
+	cfgLen := len(cfg)
+	wrkrLen := len(wrkrs)
+	if len(wrkrs) != len(cfg) {
+		t.Errorf("Length of created workers (%d) does not match config input (%d).", wrkrLen, cfgLen)
+	}
+}
+
+func TestCreateWorkersFromConfigReturnsErrForEmptyInput(t *testing.T) {
+	cfg := []config.Worker{}
+
+	_, err := CreateWorkersFromConfig(cfg)
+
+	if err == nil {
+		t.Error("Err was not returned from CreateWorkersFromConfig")
 	}
 }

@@ -12,11 +12,12 @@ type Manager struct {
 	curr      *Worker
 }
 
-// NewManager creates an instance of a Manager
+// NewManager creates an instance of a Manager given a selection and a Worker array
 func NewManager(selection string, workers []*Worker) (*Manager, error) {
 	if len(workers) == 0 {
 		return nil, errors.New("Cannot initialize Manager with no workers")
 	}
+
 	m := &Manager{
 		Workers:   workers,
 		Selection: selection,

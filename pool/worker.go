@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/lwalter/gobalance/config"
 )
 
 // Worker describes a member of a given pool which will receive requests
@@ -19,6 +21,21 @@ type Worker struct {
 // NewWorker creates an instance of a Worker
 func NewWorker(scheme string, host string, port int) *Worker {
 	return &Worker{Scheme: scheme, Host: host, Port: port, clnt: &http.Client{}}
+}
+
+// CreateWorkersFromConfig generates a Worker array from configuration
+func CreateWorkersFromConfig(cfg []config.Worker) ([]*Worker, error) {
+	if len(cfg) == 0 {
+		return nil, errors.New("Worker config is empty")
+	}
+
+	var wrkrs []*Worker
+	for _, wc := range cfg {
+		wrkr := NewWorker(wc.Scheme, wc.Host, wc.Port)
+		wrkrs = append(wrkrs, wrkr)
+	}
+
+	return wrkrs, nil
 }
 
 // SendRequest executes an http call to the current worker
