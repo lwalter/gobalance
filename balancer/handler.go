@@ -1,6 +1,7 @@
 package balancer
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,30 +15,31 @@ func CatchAllHandler(m *pool.Manager) func(http.ResponseWriter, *http.Request) {
 		wrkr, err := m.GetNextWorker()
 
 		if err != nil {
-			log.Println("Couldnt get a worker")
+			log.Println(fmt.Sprintf("Couldnt get a worker: %s", err))
 			http.Error(w, "Internal server error", 500)
 			return
 		}
 
 		// TODO(lnw) make concurrent, use channels?
-		resp, err := wrkr.SendRequest(r.Method, r.URL.RequestURI())
+		resp, err := wrkr.SendRequest(r)
 
 		if err != nil {
-			log.Println("Upstream worker failed to send request")
+			log.Println(fmt.Sprintf("Upstream worker failed to send request: %s", err))
 			http.Error(w, "Internal server error", 500)
 			return
 		}
 
-		w.WriteHeader(resp.StatusCode)
 		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
-			log.Println("Could not send request to upstream worker")
+			log.Println(fmt.Sprintf("Could not send request to upstream worker: %s", err))
 			http.Error(w, "Internal server error", 500)
 			return
 		}
 
+		wrkr.MergeHeaders(resp, w)
+		w.WriteHeader(resp.StatusCode)
 		w.Write(body)
 	}
 }

@@ -1,36 +1,51 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
 
-// Foo describes a dummy object to be returned by test servers
-type Foo struct {
-	Foo string `json:"foo"`
-}
-
 func rootHandler(name string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Extract headers for logging
+		var headers []string
+		for n, hs := range r.Header {
+			n = strings.ToLower(n)
+			for _, h := range hs {
+				headers = append(headers, fmt.Sprintf("%v: %v", n, h))
+			}
+		}
+
+		// Extract body for logging
+		defer r.Body.Close()
+		body, err := ioutil.ReadAll(r.Body)
+
+		if err != nil {
+			log.Println(fmt.Sprintf("Could not parse request body: %s", err))
+		}
+
 		fmt.Println(fmt.Sprintf(
-			"[%s] method: %s route: %s remote: %s referer: %s user-agent: %s",
+			"[%s] method: %s route: %s remote: %s referer: %s user-agent: %s\nheaders: %s\nbody: %s",
 			name,
 			r.Method,
 			r.URL.String(),
 			r.RemoteAddr,
 			r.Referer(),
-			r.UserAgent()))
+			r.UserAgent(),
+			headers,
+			body,
+		))
 
 		w.Header().Set("Content-Type", "application-json")
 		w.Header().Set("Status", "200")
-		foo := &Foo{Foo: "bar"}
-		json.NewEncoder(w).Encode(foo)
+		w.Write(body)
 	}
 }
 

@@ -1,10 +1,14 @@
+# gobalance
+
 ## TODO
 - [x] Init from config
 - [x] Pool manager and workers
 - [x] CLI
 - [x] Development pool
-- [ ] Round robin
+- [x] Round robin
+- [x] Header adjustments
 - [ ] Documentation
+- [ ] CI pipeline (build, test, coverage)
 - [ ] Header modification
 - [ ] Statistics
 - [ ] Logging
@@ -13,15 +17,15 @@
 - [ ] Ip hash
 - [ ] REST API
 - [ ] Management UI
+- [ ] IP blacklisting/whitelisting
 
 ## Development
 * To spin up downstream test servers, open a separate terminal and run ```go run test/testpool.go```
-* This will create two local endpoints with the following information
-    * Route: "/"
+* This will create two local endpoints with catch all route handlers with the following information
     * Methods: GET, POST, PUT, DELETE
-    * Ports: 4000, 4001
+    * Ports: 8080, 8081
 * Ex:
-    * ```curl localhost:4000/ -X GET```
-    * ```curl localhost:4001/ -X GET```
-    * ```curl localhost:4000/ -X POST```
-    * ```curl localhost:4001/ -X POST```
+    * ```curl localhost:8080/products -X GET```
+    * ```curl localhost:8081/animal/1 -X GET```
+    * ```curl localhost:8080/books -X POST```
+    * ```curl localhost:8081/games -X POST```

@@ -41,7 +41,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	wrkrs := pool.CreateWorkersFromConfig(config.Config.Pool.Workers)
+	wrkrs, err := pool.CreateWorkersFromConfig(config.Config.Pool.Workers)
+
+	if err != nil {
+		log.Fatal("Could not generate workers from configuration")
+	}
+
 	m, err := pool.NewManager(config.Config.Pool.Selection, wrkrs)
 
 	if err != nil {
