@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -45,7 +46,7 @@ func rootHandler(name string) func(http.ResponseWriter, *http.Request) {
 
 		w.Header().Set("Content-Type", "application-json")
 		w.Header().Set("Status", "200")
-		w.Write(body)
+		json.NewEncoder(w).Encode(string(body))
 	}
 }
 
