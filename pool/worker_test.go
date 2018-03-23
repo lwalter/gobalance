@@ -36,7 +36,13 @@ func TestSendRequest(t *testing.T) {
 
 	wrkr := NewWorker(url.Scheme, url.Hostname(), port)
 
-	resp, err := wrkr.SendRequest("GET", "/")
+	r, err := http.NewRequest("GET", "/", nil)
+
+	if err != nil {
+		t.Errorf("Could not generate http request to send")
+	}
+
+	resp, err := wrkr.SendRequest(r)
 
 	if err != nil {
 		t.Errorf("Could not send request: %s", err)
