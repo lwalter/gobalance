@@ -1,4 +1,6 @@
-# gobalance
+# gobalance 
+[![CircleCI](https://circleci.com/gh/lwalter/gobalance.svg?style=shield)](https://circleci.com/gh/lwalter/gobalance)
+[![codecov](https://codecov.io/gh/lwalter/gobalance/branch/master/graph/badge.svg)](https://codecov.io/gh/lwalter/gobalance)
 
 ## TODO
 - [x] Init from config
